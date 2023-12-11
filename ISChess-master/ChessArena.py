@@ -6,7 +6,7 @@ from PyQt6 import uic
 from Bots.ChessBotList import *
 from ChessRules import *
 from ParallelPlayer import *
-from Bots import *
+
 
 import numpy as np
 
@@ -192,8 +192,8 @@ class ChessArena(QtWidgets.QWidget):
         return None
 
     def load_assets(self):
-        self.white_square = QtGui.QPixmap("Data/assets/light_square.png")
-        self.black_square = QtGui.QPixmap("Data/assets/dark_square.png")
+        self.white_square = QtGui.QPixmap("assets/light_square.png")
+        self.black_square = QtGui.QPixmap("assets/dark_square.png")
 
         self.pieces_imgs = {}
 
@@ -267,7 +267,7 @@ class ChessArena(QtWidgets.QWidget):
         self.chessboardView.fitInView(self.chess_scene.sceneRect())
 
     def start(self):
-        self.board = self.load_board("Data/maps/default.brd")
+        self.board = self.load_board("maps/default.brd")
         self.setup_board()
         self.setup_players()
         self.chess_scene.update()
