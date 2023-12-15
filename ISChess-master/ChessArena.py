@@ -3,6 +3,7 @@
 from PyQt6 import QtCore, QtWidgets, QtGui
 from PyQt6 import uic
 
+from Bots.BaseChessBot import *
 from Bots.ChessBotList import *
 from ChessRules import *
 from ParallelPlayer import *
@@ -195,8 +196,8 @@ class ChessArena(QtWidgets.QWidget):
         return None
 
     def load_assets(self):
-        self.white_square = QtGui.QPixmap("assets/light_square.png")
-        self.black_square = QtGui.QPixmap("assets/dark_square.png")
+        self.white_square = QtGui.QPixmap("Data/assets/light_square.png")
+        self.black_square = QtGui.QPixmap("Data/assets/dark_square.png")
 
         self.pieces_imgs = {}
 
@@ -237,7 +238,6 @@ class ChessArena(QtWidgets.QWidget):
 
         for y in range(self.board.shape[1]):
             for x in range(self.board.shape[0]):
-
                 square_color = self.white_square if (x+y) % 2 == 0 else self.black_square
                 square_item = self.chess_scene.addPixmap(square_color)
                 square_item.setPos(QtCore.QPointF(square_color.size().width()*y,square_color.size().height()*x))
@@ -270,7 +270,7 @@ class ChessArena(QtWidgets.QWidget):
         self.chessboardView.fitInView(self.chess_scene.sceneRect())
 
     def start(self):
-        self.board = self.load_board("maps/default.brd")
+        self.board = self.load_board("Data/maps/default.brd")
         self.setup_board()
         self.setup_players()
         self.chess_scene.update()

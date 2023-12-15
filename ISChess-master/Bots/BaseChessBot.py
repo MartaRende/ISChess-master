@@ -21,4 +21,4 @@ def chess_bot(player_sequence, board, time_budget, **kwargs):
     return old,new
 
 #   Example how to register the function
-register_chess_bot("Pawn", chess_bot)
+register_chess_bot("Bot de Marta et Marco", chess_bot)
