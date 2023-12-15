@@ -1,5 +1,5 @@
-
-from read_data import  ElaborateData
+import random
+from Bots.read_data import ElaborateData
 
 
 class Heuristics :
@@ -7,7 +7,7 @@ class Heuristics :
         self.color_bot = []
         self.elab_data = ElaborateData(player_sequence,board)
         self.data = board
-        self.color_bot = self.elab_data.find_bot_color()
+        self.color_bot,self.color_adv = self.elab_data.find_bot_color()
 
     def calculate_weight(self,board):
         weight = 0
@@ -40,5 +40,10 @@ class Heuristics :
                         weight -= 900
         print(weight)
         return weight
+
+    def choose_random_weight(self, boards):
+        random.shuffle(boards)
+        return boards[0]
+
 
 

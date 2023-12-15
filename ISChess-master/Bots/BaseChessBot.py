@@ -10,14 +10,15 @@
 from PyQt6 import QtCore
 
 #   Be careful with modules to import from the root (don't forget the Bots.)
-from .ChessBotList import register_chess_bot
-from minmax import Maximizer
+from Bots.ChessBotList import register_chess_bot
+from Bots.minmax import Maximizer
 #   Simply move the pawns forward and tries to capture as soon as possible
 def chess_bot(player_sequence, board, time_budget, **kwargs):
-    maximize = Maximizer(player_sequence, board)
-    x_old, y_old = maximize.determine_final_position()
 
-    return (0,0), (0,0)
+    maximize = Maximizer(player_sequence, board)
+    old, new = maximize.determine_final_position()
+    print(old,new)
+    return old,new
 
 #   Example how to register the function
 register_chess_bot("Pawn", chess_bot)

@@ -1,5 +1,8 @@
-from NewState import NewState
+import time
 
+import numpy as np
+
+from Bots.NewState import NewState
 
 
 class Maximizer:
@@ -7,43 +10,41 @@ class Maximizer:
         self.depth = 3
         self.newstate = NewState(player_sequence,board)
         self.newstate.create_tree(self.depth)
-        self.board = board #old_board
+        self.board = np.array(board) #old_board
 
 
-    def minimax(self,node = None, depth=3, maximizingPlayer=True):
+    def minimax(self,node, depth, maximizingPlayer=True):
         if node is None:
             node = self.newstate.root
         if node.is_leaf() or depth == 0:
             return node.value
-
         if maximizingPlayer:
-            best_value = float('-inf')
+            max_value = float('-inf')
             for child_node in node.children:
                 v = self.minimax(child_node, depth - 1, False)
-                best_value = max(best_value, v)
-            return best_value
+                max_value = max(max_value, v)
+            node.value = max_value
+            return max_value
         else:
-            best_value = float('inf')
+            min_value = float('inf')
             for child_node in node.children:
                 v = self.minimax(child_node, depth - 1, True)
-
-                best_value = min(best_value, v)
-
-        return best_value
+                min_value= min(min_value, v)
+            node.value = min_value
+            return min_value
 
     def find_new_state(self):
-        best_value = self.minimax(None,  3, True)
+        all_poss_boards= []
+        best_value = self.minimax(self.newstate.root,  self.depth, True)
         print("best",best_value)
-        val = []
         for key, value in self.newstate.hash_map.items():
-            print(key.value,value)
+           # print(key.value,value)
             if key.value == best_value:
-                print(key.value)
-                val = value
-                return val
+                all_poss_boards.append(value)
+        return self.newstate.moves.heuristics.choose_random_weight(all_poss_boards)
 
     def determine_final_position(self):
-        new_board = self.find_new_state()
+        new_board = np.array(self.find_new_state())
         print("new_board", new_board)
         print("old_board", self.board)
 
@@ -52,45 +53,45 @@ class Maximizer:
             for j in range(len(self.board[i])):
                 if self.board[i][j] != new_board[i][j]:
                     differences.append((i, j))
-
         if len(differences) != 2:
             print("Error")
             return None
 
-        start_pos = differences[0]
-        end_pos = differences[1]
+        start_pos, end_pos = differences[0], differences[1]
 
-        start_piece = self.board[start_pos[0]][start_pos[1]]
-        end_piece = new_board[end_pos[0]][end_pos[1]]
 
-        print("Initial piece:", start_piece, "Pos init:", start_pos)
-        print("Final piece:", end_piece, "Pos fin:", end_pos)
-        if start_piece[1] not in self.newstate.moves.color_bot:
+        piece = ''
+        if len(self.board[start_pos[0]][start_pos[1]]) > 1 and self.board[start_pos[0]][start_pos[1]][
+            1] in self.newstate.moves.color_bot:
+            piece = self.board[start_pos[0]][start_pos[1]]
+        elif len(self.board[end_pos[0]][end_pos[1]]) > 1 and self.board[end_pos[0]][end_pos[1]][
+            1] in self.newstate.moves.color_bot:
+            piece = self.board[end_pos[0]][end_pos[1]]
             temp = end_pos
             end_pos = start_pos
             start_pos = temp
-
-        return start_pos,end_pos
-
-
-
-
+        return start_pos, end_pos
 
 
 if __name__ == "__main__":
 
     player_sequence = '0w01b2'
-    board = [
-        ['rw', 'nw', 'bw', 'qw', 'kw', 'bw', 'nw', 'rw'],
-        ['pw', 'pw', '', 'pw', '', 'pw', 'pw', 'pw'],
-        ['', '', 'pw', '', 'pw', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['pb', 'pb', '', '', '', '', '', ''],
-        ['', '', 'pb', 'pb', 'pb', 'pb', 'pb', 'pb'],
-        ['rb', 'nb', 'bb', 'kb', 'qb', 'bb', 'nb', 'rb']
-    ]
+    board =  [
+    ['', 'qw', '', '', '', '', '', ''],
+    ['', '', '', 'kw', '', '', 'rw', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', 'bw', '', '', 'pw', ''],
+    ['', '', '', '', 'pb', '', '', ''],
+    ['', '', '', '', '', 'pb', 'pb', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', 'kb', '', '', '', '']
+]
 
+
+    start_time = time.time()
     maximize = Maximizer(player_sequence,board)
     x_old, y_old = maximize.determine_final_position()
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print("Execution Time:",execution_time)
     print(x_old, y_old)

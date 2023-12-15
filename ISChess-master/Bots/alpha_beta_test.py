@@ -1,5 +1,5 @@
 
-from Node import Node
+from Bots.Node import Node
 
 def minimax(node, depth=3, maximizingPlayer=True, alpha = float('-inf'), beta = float('inf')):
     if node.is_leaf() or depth == 0:

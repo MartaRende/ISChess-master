@@ -1,7 +1,10 @@
+import numpy as np
+
+
 class ElaborateData:
     def __init__(self,player_sequence, board):
         self.player_sequence = player_sequence
-        self.board = board
+        self.board = np.array(board)
 #not usefull
     def read_data(self):
         with open(self.file_path, "r") as file:
@@ -17,9 +20,10 @@ class ElaborateData:
         self.newdata = [[item.rstrip('\n') for item in sublist] for sublist in data]
         return  self.newdata
 
-    #to find team
+    #to find team it works only for 1vs1
     def find_bot_color(self):
         color_bot = []
+        color_adv = []
         newline = ''
 
         for i in range(0, len(self.player_sequence), 3):
@@ -28,8 +32,10 @@ class ElaborateData:
         for i in range(len(newline)):
             if newline[i] == self.player_sequence[0]:
                 color_bot.append(newline[i + 1])
+            elif newline[i]== self.player_sequence[2]:
+                color_adv.append((newline[i+1]))
 
-        return color_bot
+        return color_bot,color_adv
 
 
 

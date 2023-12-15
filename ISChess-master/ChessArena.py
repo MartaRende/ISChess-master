@@ -8,6 +8,7 @@ from ChessRules import *
 from ParallelPlayer import *
 
 
+
 import numpy as np
 
 #   Wrap up for QApplication
@@ -149,7 +150,9 @@ class ChessArena(QtWidgets.QWidget):
         if winner is None:
             self.add_system_message("# Match ended in a draw")
         else:
-            self.add_system_message("# ",COLOR_NAMES[winner]," won the match")
+            message = "# " + COLOR_NAMES[winner] + " won the match"
+            self.add_system_message(message)
+
 
     def select_and_load_board(self):
         path = QtWidgets.QFileDialog.getOpenFileName(self, "Select board", "C:\\Users\\Louis\\Desktop\\ISChess\\Data\\maps", "Board File (*.brd)")
