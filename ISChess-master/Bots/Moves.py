@@ -9,31 +9,28 @@ class Moves:
         self.color_bot= self.heuristics.color_bot # ex [w]
         self.color_adv = self.heuristics.color_adv
         self.color = self.color_bot
-        self.count = 0
 
     def pawn(self, x, y, current_board):
         newPos = []
         board_length = len(current_board)
-        print("pos", x, y)
 
-        def is_valid_position(row, col):
-            return 0 <= row < board_length and 0 <= col < board_length
+        def is_valid_move(dx, dy):
+            return 0 <= x + dx < board_length and 0 <= y + dy < board_length
 
-        # Movimento in avanti
-        new_x, new_y = x + 1, y
-        if is_valid_position(new_x, new_y) and current_board[new_x][new_y] == '':
-            newPos.append([x, y, new_x, new_y])
+        def can_capture(dx, dy):
+            return is_valid_move(dx, dy) and current_board[x + dx][y + dy] != '' and current_board[x + dx][y + dy][
+                1] not in self.color
 
-        # Verifica delle posizioni diagonali solo se esiste una pedina avversaria da mangiare
-        for dx, dy in [(1, 1), (-1, 1)]:
-            new_x, new_y = x + dx, y + dy
-            if is_valid_position(new_x, new_y) and current_board[new_x][new_y]:
-                if current_board[new_x][new_y][1] in self.color_adv:
-                    newPos.append([x, y, new_x, new_y])
+        if is_valid_move(1, 0) and (current_board[x + 1][y] == '' ):
+            newPos.append([x, y, x + 1, y])
 
+        if can_capture(1, 1):
+            newPos.append([x, y, x + 1, y + 1])
+        if can_capture(-1, 1):
+            newPos.append([x, y, x - 1, y + 1])
+        newPos = [move for move in newPos if move[2] >= x]
         print("ped", newPos)
         return newPos
-
     def rook(self, x, y, current_board):
         newPos = []
         board_length = len(current_board)
@@ -219,6 +216,7 @@ class Moves:
                 self.color = self.color_adv
             else:
                 self.color = self.color_bot
+        print("color",self.color)
         return self.color
     def find_new_state(self, current_board,current_depth,depth):
         all_poss_position = []

@@ -1,3 +1,4 @@
+import time
 
 #
 #   Example function to be implemented for
@@ -14,10 +15,11 @@ from Bots.ChessBotList import register_chess_bot
 from Bots.minmax import Maximizer
 #   Simply move the pawns forward and tries to capture as soon as possible
 def chess_bot(player_sequence, board, time_budget, **kwargs):
-
+    start_time = time.time()
     maximize = Maximizer(player_sequence, board)
     old, new = maximize.determine_final_position()
-    print(old,new)
+    end_time = time.time()
+    print("execution time:",end_time-start_time)
     return old,new
 
 #   Example how to register the function
