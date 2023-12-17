@@ -7,7 +7,7 @@ from Bots.NewState import NewState
 
 class Maximizer:
     def __init__(self,player_sequence, board ):
-        self.depth = 3
+        self.depth = 4
         self.newstate = NewState(player_sequence,board)
         self.newstate.create_tree(self.depth)
         self.board = np.array(board) #old_board
@@ -37,11 +37,7 @@ class Maximizer:
         all_poss_boards= []
         best_value = self.minimax(self.newstate.root,  self.depth, True)
         print("best",best_value)
-        for key, value in self.newstate.hash_map.items():
-           # print(key.value,value)
-            if key.value == best_value:
-                all_poss_boards.append(value)
-        return self.newstate.moves.heuristics.choose_random_weight(all_poss_boards)
+        return self.newstate.moves.heuristics.choose_weighted_random_weight(self.newstate.hash_map_board,self.newstate.hash_map_piece,best_value)
 
     def determine_final_position(self):
         new_board = np.array(self.find_new_state())

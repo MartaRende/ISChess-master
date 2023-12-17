@@ -8,7 +8,8 @@ class NewState:
     def __init__(self, player_sequence, board):
         self.moves = Moves(player_sequence,board)
         self.root = None
-        self.hash_map = {}
+        self.hash_map_board = {}
+        self.hash_map_piece = {}
         self.current_board = self.moves.board
 
     def create_main_node(self):
@@ -39,18 +40,18 @@ class NewState:
             if current_depth <= 0:
                 continue
 
-            print("current depth", current_depth)
             poss_positions = self.moves.find_new_state(current_board, current_depth,depth)
 
             for poss in poss_positions:
-                new_data = self.moves.new_board(poss[0], poss[1], poss[2], poss[3], current_board)
+                new_data,piece = self.moves.new_board(poss[0], poss[1], poss[2], poss[3], current_board)
                 child_node = self.create_child(current_node, new_data, current_depth)
 
                 # Check if the new_data has already been visited
                 if tuple(map(tuple, new_data)) not in visited:
                     visited.add(tuple(map(tuple, new_data)))
                     if current_depth == depth :
-                        self.hash_map[child_node] = new_data
+                        self.hash_map_board[child_node] = new_data
+                        self.hash_map_piece[child_node] = piece
 
                     next_player = not is_maximizing
                     queue.append((child_node, new_data, current_depth - 1, next_player))

@@ -8,7 +8,7 @@ class Moves:
         self.color_bot = []
         self.color_bot= self.heuristics.color_bot # ex [w]
         self.color_adv = self.heuristics.color_adv
-        self.color = self.color_bot
+        self.color = self.color_adv
 
     def pawn(self, x, y, current_board):
         newPos = []
@@ -29,7 +29,6 @@ class Moves:
         if can_capture(-1, 1):
             newPos.append([x, y, x - 1, y + 1])
         newPos = [move for move in newPos if move[2] >= x]
-        print("ped", newPos)
         return newPos
     def rook(self, x, y, current_board):
         newPos = []
@@ -72,7 +71,6 @@ class Moves:
             else:
                 break
 
-        print("rook", newPos)
         return newPos
 
     def king(self, x, y, current_board):
@@ -90,7 +88,6 @@ class Moves:
                 if current_board[i][j] == '' or current_board[i][j][1] not in self.color:
                     newPos.append([x, y, i, j])
 
-        print("king", newPos)
         return newPos
 
     def queen(self, x, y, current_board):
@@ -113,7 +110,6 @@ class Moves:
                 i += dx
                 j += dy
 
-        print("queen", newPos)
         return newPos
 
     def bishop(self, x, y, current_board):
@@ -168,7 +164,6 @@ class Moves:
             i -= 1
             j += 1
 
-        print("bishop", newPos)
         return newPos
 
     def knights(self, x, y, current_board):
@@ -185,7 +180,6 @@ class Moves:
                 if current_board[i][j] == '' or current_board[i][j][1] not in self.color:
                     newPos.append([x, y, i, j])
 
-        print("knights", newPos)
         return newPos
 
     def new_board(self, oldx, oldy, newx, newy,current_board):
@@ -199,24 +193,16 @@ class Moves:
                 else:
                     row.append(current_board[i][j])
             newdata.append(row)
-        print(newdata[oldx][oldy])
+        piece = newdata[oldx][oldy]
         newdata[oldx][oldy] = ''
-        print(oldx,oldy,newx,newy)
-        print("new board", newdata)
-        return newdata
+        return newdata,piece
 
     def find_actual_color(self,current_depth,depth):
-        if depth % 2 == 0:
-            if current_depth % 2 == 0:
-                self.color = self.color_bot
-            else:
-                self.color = self.color_adv
+        if self.color == self.color_adv:
+            self.color = self.color_bot
         else:
-            if current_depth % 2 == 0:
-                self.color = self.color_adv
-            else:
-                self.color = self.color_bot
-        print("color",self.color)
+            self.color=self.color_adv
+
         return self.color
     def find_new_state(self, current_board,current_depth,depth):
         all_poss_position = []
@@ -225,7 +211,6 @@ class Moves:
         for i in range(len(current_board)):
             for j in range(len(current_board[i])):
                 if current_board[i][j] != '':
-                    print("board",current_board)
                     if current_board[i][j][0] == 'p' and current_board[i][j][1]in self.color:
                         all_poss_position += self.pawn(i,j,current_board)
                     if current_board[i][j][0] == 'r' and current_board[i][j][1]in self.color:
@@ -238,7 +223,6 @@ class Moves:
                         all_poss_position += self.queen(i,j,current_board)
                     if current_board[i][j][0] == 'k'and current_board[i][j][1]in self.color:
                         all_poss_position += self.king(i,j,current_board)
-        print(all_poss_position)
 
         return all_poss_position
 
