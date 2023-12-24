@@ -36,7 +36,7 @@ class NewState:
 
         while queue:
             current_node, current_board, current_depth, is_maximizing = queue.popleft()
-
+            #print("current depth", current_depth)
             if current_depth <= 0:
                 continue
 
@@ -44,10 +44,12 @@ class NewState:
 
             for poss in poss_positions:
                 new_data,piece = self.moves.new_board(poss[0], poss[1], poss[2], poss[3], current_board)
-                child_node = self.create_child(current_node, new_data, current_depth)
 
                 # Check if the new_data has already been visited
                 if tuple(map(tuple, new_data)) not in visited:
+                    #print("new board:", new_data)
+                    child_node = self.create_child(current_node, new_data, current_depth)
+
                     visited.add(tuple(map(tuple, new_data)))
                     if current_depth == depth :
                         self.hash_map_board[child_node] = new_data

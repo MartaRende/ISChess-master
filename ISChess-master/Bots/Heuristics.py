@@ -16,30 +16,32 @@ class Heuristics :
         for i in range(len(board)):
             for j in range(len(board[i])):
                 if  board[i][j] != '':
-                    if board[i][j][0] == 'p' and board[i][j][1] in self.color_bot:
-                        weight += 10
-                    if board[i][j][0] == 'r' and board[i][j][1] in self.color_bot:
-                        weight += 50
-                    if board[i][j][0] == 'n' and board[i][j][1] in self.color_bot:
-                        weight += 30
-                    if board[i][j][0] == 'b' and board[i][j][1] in self.color_bot:
-                        weight += 30
-                    if board[i][j][0] == 'q'  and board[i][j][1] in self.color_bot:
-                        weight += 90
-                    if board[i][j][0] == 'k' and board[i][j][1] in self.color_bot:
-                        weight += 900
-                    if board[i][j][0] == 'p' and board[i][j][1] not in self.color_bot:
-                        weight -= 10
-                    if board[i][j][0] == 'r' and board[i][j][1] not in self.color_bot:
-                        weight -= 50
-                    if board[i][j][0] == 'n'and board[i][j][1] not in self.color_bot:
-                        weight -= 30
-                    if board[i][j][0] == 'b' and board[i][j][1] not in self.color_bot:
-                        weight -= 30
-                    if board[i][j][0] == 'q' and board[i][j][1] not in self.color_bot:
-                        weight -= 90
-                    if board[i][j][0] == 'k'and board[i][j][1] not in self.color_bot:
-                        weight -= 900
+                    if board[i][j][1] in self.color_bot:
+                        if board[i][j][0] == 'p':
+                            weight += 10
+                        if board[i][j][0] == 'r' :
+                            weight += 50
+                        if board[i][j][0] == 'n' :
+                            weight += 30
+                        if board[i][j][0] == 'b' :
+                            weight += 30
+                        if board[i][j][0] == 'q'  :
+                            weight += 90
+                        if board[i][j][0] == 'k' :
+                            weight += 900
+                    else:
+                        if board[i][j][0] == 'p' and board[i][j][1] :
+                            weight -= 10
+                        if board[i][j][0] == 'r' and board[i][j][1] :
+                            weight -= 50
+                        if board[i][j][0] == 'n'and board[i][j][1] :
+                            weight -= 30
+                        if board[i][j][0] == 'b' and board[i][j][1] :
+                            weight -= 30
+                        if board[i][j][0] == 'q' and board[i][j][1] :
+                            weight -= 90
+                        if board[i][j][0] == 'k'and board[i][j][1] :
+                            weight -= 900
         return weight
 
 
@@ -58,7 +60,7 @@ class Heuristics :
                     weight.append(60)
                     prov_hash_map[key] = value
                 if hash_map_piece[key][0] == 'b':
-                    weight.append(70)
+                    weight.append(30)
                     prov_hash_map[key] = value
                 if hash_map_piece[key][0] == 'q':
                     weight.append(10)

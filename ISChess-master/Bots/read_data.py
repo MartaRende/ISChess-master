@@ -32,9 +32,8 @@ class ElaborateData:
         for i in range(len(newline)):
             if newline[i] == self.player_sequence[0]:
                 color_bot.append(newline[i + 1])
-            elif newline[i]== 'b':
-                color_adv.append((newline[i]))
-
+            elif newline[i]== self.player_sequence[3]:
+                color_adv.append((newline[i+1]))
         return color_bot,color_adv
 
 

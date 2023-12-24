@@ -19,17 +19,30 @@ class Moves:
 
         def can_capture(dx, dy):
             return is_valid_move(dx, dy) and current_board[x + dx][y + dy] != '' and current_board[x + dx][y + dy][
-                1] not in self.color
+                1] in self.color_adv
 
-        if is_valid_move(1, 0) and (current_board[x + 1][y] == '' ):
-            newPos.append([x, y, x + 1, y])
+        if self.color == self.color_bot:
+            if is_valid_move(1, 0) and (current_board[x + 1][y] == ''):
+                newPos.append([x, y, x + 1, y])
 
-        if can_capture(1, 1):
-            newPos.append([x, y, x + 1, y + 1])
-        if can_capture(-1, 1):
-            newPos.append([x, y, x - 1, y + 1])
-        newPos = [move for move in newPos if move[2] >= x]
+            if can_capture(1, -1):
+                newPos.append([x, y, x + 1, y - 1])
+            if can_capture(1, 1):
+                newPos.append([x, y, x + 1, y + 1])
+            newPos = [move for move in newPos if
+                      move[2] >= x]
+        elif self.color == self.color_adv:
+            if is_valid_move(-1, 0) and (current_board[x - 1][y] == ''):
+                newPos.append([x, y, x - 1, y])
+
+            if can_capture(-1, -1):
+                newPos.append([x, y, x - 1, y - 1])
+            if can_capture(-1, 1):
+                newPos.append([x, y, x - 1, y + 1])
+            newPos = [move for move in newPos if
+                      move[2] <= x]
         return newPos
+
     def rook(self, x, y, current_board):
         newPos = []
         board_length = len(current_board)
@@ -198,11 +211,18 @@ class Moves:
         return newdata,piece
 
     def find_actual_color(self,current_depth,depth):
-        if self.color == self.color_adv:
-            self.color = self.color_bot
-        else:
-            self.color=self.color_adv
+        if (depth % 2) == 0:
+            if current_depth %2 ==0:
+                self.color = self.color_bot
+            else:
+                self.color=self.color_adv
+        else :
+            if current_depth %2 !=0:
+                self.color = self.color_bot
+            else:
+                self.color=self.color_adv
 
+        #print("color", self.color)
         return self.color
     def find_new_state(self, current_board,current_depth,depth):
         all_poss_position = []
@@ -223,7 +243,6 @@ class Moves:
                         all_poss_position += self.queen(i,j,current_board)
                     if current_board[i][j][0] == 'k'and current_board[i][j][1]in self.color:
                         all_poss_position += self.king(i,j,current_board)
-
         return all_poss_position
 
 
