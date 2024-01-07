@@ -5,20 +5,7 @@ class ElaborateData:
     def __init__(self,player_sequence, board):
         self.player_sequence = player_sequence
         self.board = np.array(board)
-#not usefull
-    def read_data(self):
-        with open(self.file_path, "r") as file:
-            arr = []
-            for line in file:
-                # Split each line into elements (assuming space-separated values)
-                line_elements = line.split(',')  # Change the split delimiter if necessary
-                arr.append(line_elements)
-        return arr
-    #not usefull
-    def read_clean_data(self):
-        data = self.read_data()
-        self.newdata = [[item.rstrip('\n') for item in sublist] for sublist in data]
-        return  self.newdata
+
 
     #to find team it works only for 1vs1
     def find_bot_color(self):

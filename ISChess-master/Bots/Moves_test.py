@@ -1,39 +1,46 @@
-from Bots.Heuristics import Heuristics
+from Bots.Heuristics_test import Heuristics_test
 
 
-class Moves:
+class Moves_test:
     def __init__(self,player_sequence, board):
-        self.heuristics = Heuristics(player_sequence, board)
+        self.heuristics = Heuristics_test(player_sequence, board)
         self.board = board
         self.color_bot = []
         self.color_bot= self.heuristics.color_bot # ex [w]
         self.color_adv = self.heuristics.color_adv
         self.color = self.color_adv
-# function for all possibles movements of pieces
-# they return an array with all possible positions of all pieces in a board
+
     def pawn(self, x, y, current_board):
         newPos = []
         board_length = len(current_board)
-        direction = 1 if self.color == self.color_bot else -1  # Determine pawn's direction based on its color
 
         def is_valid_move(dx, dy):
             return 0 <= x + dx < board_length and 0 <= y + dy < board_length
 
-        def can_move(dx, dy):
-            return is_valid_move(dx, dy) and current_board[x + dx][y + dy] == ''
-
         def can_capture(dx, dy):
             return is_valid_move(dx, dy) and current_board[x + dx][y + dy] != '' and current_board[x + dx][y + dy][
-                1] not in self.color
+                1] in self.color_adv
 
-        if can_move(direction, 0):  # Moving one step forward
-            newPos.append([x, y, x + direction, y])
+        if self.color == self.color_bot:
+            if is_valid_move(1, 0) and (current_board[x + 1][y] == ''):
+                newPos.append([x, y, x + 1, y])
 
-        if can_capture(direction, -1):  # Capture diagonally left
-            newPos.append([x, y, x + direction, y - 1])
-        if can_capture(direction, 1):  # Capture diagonally right
-            newPos.append([x, y, x + direction, y + 1])
+            if can_capture(1, -1):
+                newPos.append([x, y, x + 1, y - 1])
+            if can_capture(1, 1):
+                newPos.append([x, y, x + 1, y + 1])
+            newPos = [move for move in newPos if
+                      move[2] >= x]
+        elif self.color == self.color_adv:
+            if is_valid_move(-1, 0) and (current_board[x - 1][y] == ''):
+                newPos.append([x, y, x - 1, y])
 
+            if can_capture(-1, -1):
+                newPos.append([x, y, x - 1, y - 1])
+            if can_capture(-1, 1):
+                newPos.append([x, y, x - 1, y + 1])
+            newPos = [move for move in newPos if
+                      move[2] <= x]
         return newPos
 
     def rook(self, x, y, current_board):
@@ -83,6 +90,7 @@ class Moves:
         newPos = []
         board_length = len(current_board)
 
+        # Verifica le nuove posizioni all'interno dei limiti della griglia di gioco per il re
         possible_moves = [
             (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1),
             (x + 1, y + 1), (x + 1, y - 1), (x - 1, y + 1), (x - 1, y - 1)
@@ -92,14 +100,14 @@ class Moves:
             if 0 <= i < board_length and 0 <= j < board_length:
                 if current_board[i][j] == '' or current_board[i][j][1] not in self.color:
                     newPos.append([x, y, i, j])
-                elif current_board[i][j][0] == 'p' and current_board[i][j][1] not in self.color:
-                    newPos.append([x, y, i, j])
-                    break
+
         return newPos
 
     def queen(self, x, y, current_board):
         newPos = []
         board_length = len(current_board)
+
+        # Verifica le nuove posizioni all'interno dei limiti della griglia di gioco per la regina
         directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
 
         for dx, dy in directions:
@@ -114,13 +122,11 @@ class Moves:
                     break
                 i += dx
                 j += dy
-        print(newPos)
-        return newPos
 
+        return newPos
 
     def bishop(self, x, y, current_board):
         newPos = []
-
         board_length = len(current_board)
 
         i, j = x + 1, y + 1
@@ -130,7 +136,6 @@ class Moves:
             elif current_board[i][j][1] not in self.color:
                 newPos.append([x, y, i, j])
                 break
-
             else:
                 break
             i += 1
@@ -143,7 +148,6 @@ class Moves:
             elif current_board[i][j][1] not in self.color:
                 newPos.append([x, y, i, j])
                 break
-
             else:
                 break
             i -= 1
@@ -168,7 +172,6 @@ class Moves:
             elif current_board[i][j][1] not in self.color:
                 newPos.append([x, y, i, j])
                 break
-
             else:
                 break
             i -= 1
@@ -189,12 +192,9 @@ class Moves:
             if 0 <= i < board_length and 0 <= j < board_length:
                 if current_board[i][j] == '' or current_board[i][j][1] not in self.color:
                     newPos.append([x, y, i, j])
-                elif current_board[i][j][0] == 'p' and current_board[i][j][1] not in self.color:
-                    newPos.append([x, y, i, j])
-                    break
 
         return newPos
-# function that create a possible future board
+
     def new_board(self, oldx, oldy, newx, newy,current_board):
         newdata = []
 
@@ -209,7 +209,7 @@ class Moves:
         piece = newdata[oldx][oldy]
         newdata[oldx][oldy] = ''
         return newdata,piece
-# for dividing the color of the bot and the color of the adversary --> it works only for 1vs1
+
     def find_actual_color(self,current_depth,depth):
         if (depth % 2) == 0:
             if current_depth %2 ==0:
@@ -221,8 +221,9 @@ class Moves:
                 self.color = self.color_bot
             else:
                 self.color=self.color_adv
+
+        #print("color", self.color)
         return self.color
-# this function put in an array all the possible positions for all pieces
     def find_new_state(self, current_board,current_depth,depth):
         all_poss_position = []
         self.color = self.find_actual_color(current_depth,depth)

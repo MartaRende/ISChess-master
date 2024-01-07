@@ -2,17 +2,18 @@ import time
 
 import numpy as np
 
-from Bots.NewState import NewState
+from Bots.NewState_test import NewState_test
 
 
-class Maximizer:
+class Maximizer_test:
     def __init__(self,player_sequence, board ):
-        self.newstate = NewState(player_sequence,board)
-        self.depth = 3 #depth of tree
-        self.newstate.create_tree(self.depth)#to build the tree
+        self.newstate = NewState_test(player_sequence,board)
+        self.depth = 3
+        self.newstate.create_tree(self.depth)
+        print(self.newstate.count_state)
         self.board = np.array(board) #old_board
 
-#apply minimax to find the best move with a depth of 3
+
     def minimax(self,node, depth, maximizingPlayer=True):
         if node is None:
             node = self.newstate.root
@@ -34,11 +35,11 @@ class Maximizer:
             return min_value
 
     def find_new_state(self):
+
         best_value = self.minimax(self.newstate.root,  self.depth, True)
         print("best",best_value)
-        #claculate with a weighted average which of the best have to move
         return self.newstate.moves.heuristics.choose_weighted_random_weight(self.newstate.hash_map_board,self.newstate.hash_map_piece,best_value)
-# return the final x and y
+
     def determine_final_position(self):
         new_board = np.array(self.find_new_state())
         print("new_board", new_board)
@@ -54,6 +55,8 @@ class Maximizer:
             return None
 
         start_pos, end_pos = differences[0], differences[1]
+
+
         piece = ''
         if len(self.board[start_pos[0]][start_pos[1]]) > 1 and self.board[start_pos[0]][start_pos[1]][
             1] in self.newstate.moves.color_bot:
