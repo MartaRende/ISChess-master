@@ -114,7 +114,6 @@ class Moves:
                     break
                 i += dx
                 j += dy
-        print(newPos)
         return newPos
 
 
