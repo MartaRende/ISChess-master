@@ -2,20 +2,19 @@ import time
 
 import numpy as np
 
-from Bots.NewState import NewState
+from Bots.CR_TreeCreation import TreeCreation
 
-
-class Maximizer:
+class ChessMoveEvaluator:
     def __init__(self,player_sequence, board ):
-        self.newstate = NewState(player_sequence,board)
+        self.treecreation = TreeCreation(player_sequence,board)
         self.depth = 3 #depth of tree
-        self.newstate.create_tree(self.depth)#to build the tree
+        self.treecreation.create_tree(self.depth)#to build the tree
         self.board = np.array(board) #old_board
 
 #apply minimax to find the best move with a depth of 3
     def minimax(self,node, depth, maximizingPlayer=True):
         if node is None:
-            node = self.newstate.root
+            node = self.treecreation.root
         if node.is_leaf() or depth == 0:
             return node.value
         if maximizingPlayer:
@@ -34,10 +33,10 @@ class Maximizer:
             return min_value
 
     def find_new_state(self):
-        best_value = self.minimax(self.newstate.root,  self.depth, True)
+        best_value = self.minimax(self.treecreation.root,  self.depth, True)
         print("best",best_value)
         #claculate with a weighted average which of the best have to move
-        return self.newstate.moves.heuristics.choose_weighted_random_weight(self.newstate.hash_map_board,self.newstate.hash_map_piece,best_value)
+        return self.treecreation.moves.chessStrategy.choose_weighted_random_weight(self.treecreation.hash_map_board,self.treecreation.hash_map_piece,best_value)
 # return the final x and y
     def determine_final_position(self):
         new_board = np.array(self.find_new_state())
@@ -56,10 +55,10 @@ class Maximizer:
         start_pos, end_pos = differences[0], differences[1]
         piece = ''
         if len(self.board[start_pos[0]][start_pos[1]]) > 1 and self.board[start_pos[0]][start_pos[1]][
-            1] in self.newstate.moves.color_bot:
+            1] in self.treecreation.moves.color_bot:
             piece = self.board[start_pos[0]][start_pos[1]]
         elif len(self.board[end_pos[0]][end_pos[1]]) > 1 and self.board[end_pos[0]][end_pos[1]][
-            1] in self.newstate.moves.color_bot:
+            1] in self.treecreation.moves.color_bot:
             piece = self.board[end_pos[0]][end_pos[1]]
             temp = end_pos
             end_pos = start_pos

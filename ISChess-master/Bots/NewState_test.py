@@ -2,7 +2,7 @@ from collections import deque
 import random
 
 from Bots.Moves_test import Moves_test
-from Bots.Node import Node
+from Bots.CR_Node import Node
 
 
 class NewState_test:

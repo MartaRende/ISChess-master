@@ -3,7 +3,7 @@
 from PyQt6 import QtCore, QtWidgets, QtGui
 from PyQt6 import uic
 
-from Bots.BaseChessBot import *
+from Bots.CR_BaseChessBot import *
 from Bots.ChessBotList import *
 from ChessRules import *
 from ParallelPlayer import *

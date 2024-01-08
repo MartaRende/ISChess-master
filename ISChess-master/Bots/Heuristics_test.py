@@ -1,7 +1,7 @@
 import random
 
 import numpy as np
-from Bots.read_data import ElaborateData
+from Bots.CR_ElaborateData import ElaborateData
 
 
 class Heuristics_test :

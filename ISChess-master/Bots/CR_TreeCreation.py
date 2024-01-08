@@ -1,10 +1,10 @@
 from collections import deque
 
-from Bots.Moves import Moves
-from Bots.Node import Node
+from Bots.CR_Moves import Moves
+from Bots.CR_Node import Node
 
 # to build the tree
-class NewState:
+class TreeCreation:
     def __init__(self, player_sequence, board):
         self.moves = Moves(player_sequence,board)
         self.root = None
@@ -13,13 +13,13 @@ class NewState:
         self.current_board = self.moves.board
 #creation of the root
     def create_main_node(self):
-        w = self.moves.heuristics.calculate_weight(self.moves.board)
+        w = self.moves.chessStrategy.calculate_weight(self.moves.board)
         self.root = Node(w)
         return self.root
 
 #creation of the child
-    def create_child(self, parent_node, newboard, depth):
-        weight = self.moves.heuristics.calculate_weight(newboard)
+    def create_child(self, parent_node, newboard):
+        weight = self.moves.chessStrategy.calculate_weight(newboard)
         child_node = Node(weight)
         parent_node.add_child(child_node)
         return child_node
@@ -46,7 +46,7 @@ class NewState:
 
 
                 if tuple(map(tuple, new_data)) not in visited:
-                    child_node = self.create_child(current_node, new_data, current_depth)
+                    child_node = self.create_child(current_node, new_data)
 
                     visited.add(tuple(map(tuple, new_data)))
                     if current_depth == depth:

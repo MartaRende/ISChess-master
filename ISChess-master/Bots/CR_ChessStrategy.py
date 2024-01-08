@@ -1,10 +1,10 @@
 import random
 
 import numpy as np
-from Bots.read_data import ElaborateData
+from Bots.CR_ElaborateData import ElaborateData
 
 
-class Heuristics :
+class ChessStrategy :
     def __init__(self, player_sequence, board):
         self.color_bot = []
         self.elab_data = ElaborateData(player_sequence,board)

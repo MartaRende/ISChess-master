@@ -1,13 +1,13 @@
-from Bots.Heuristics import Heuristics
+from Bots.CR_ChessStrategy import ChessStrategy
 
 
 class Moves:
     def __init__(self,player_sequence, board):
-        self.heuristics = Heuristics(player_sequence, board)
+        self.chessStrategy = ChessStrategy(player_sequence, board)
         self.board = board
         self.color_bot = []
-        self.color_bot= self.heuristics.color_bot # ex [w]
-        self.color_adv = self.heuristics.color_adv
+        self.color_bot= self.chessStrategy.color_bot
+        self.color_adv = self.chessStrategy.color_adv
         self.color = self.color_adv
 # function for all possibles movements of pieces
 # they return an array with all possible positions of all pieces in a board
